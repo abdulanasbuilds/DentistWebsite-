@@ -1,84 +1,41 @@
-import { StrictMode, useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowUpRight, ChevronDown, Menu, MoveRight, Play, Plus, Star, X } from 'lucide-react';
-import { siteConfig, type Version } from './config/site.config';
 import './styles.css';
 
-function App() {
-  const [version, setVersion] = useState<Version>(() => (localStorage.getItem('dental-version') as Version) || 'one');
-  const [menuOpen, setMenuOpen] = useState(false);
-  const path = window.location.pathname.replace(/\/$/, '') || '/';
-  useEffect(() => localStorage.setItem('dental-version', version), [version]);
-  return <div className={`app version-${version}`}>
-    <Header version={version} setVersion={(next) => { setVersion(next); setMenuOpen(false); window.history.pushState({}, '', '/'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-    {version === 'one' ? (path === '/' ? <VersionOne /> : <VersionOneInner path={path} />) : <VersionTwo />}
-  </div>;
-}
+type Version = 'one' | 'two';
 
-function Header({ version, setVersion, menuOpen, setMenuOpen }: { version: Version; setVersion: (v: Version) => void; menuOpen: boolean; setMenuOpen: (v: boolean) => void }) {
-  const config = siteConfig[version];
-  const links = version === 'one' ? { 'Home': '/', 'About Us': '/about', 'Services': '/service', 'Blog': '/blog', 'Pages': '/member', 'Contact us': '/contact' } : {} as Record<string, string>;
-  return <header className="site-header">
-    <a className={`brand brand-${version}`} href="#home" aria-label={`${config.name} home`}>{version === 'two' ? <img className="brand-image" src="/images/ref-logo-2.png" alt="DentalOne" /> : <><span className="tooth-mark">✦</span><span>{config.name}</span></>}</a>
-    <nav className={`main-nav ${menuOpen ? 'open' : ''}`} aria-label="Primary navigation">
-      {config.nav.map((item) => <a key={item} href={links[item] || `#${item.toLowerCase().replaceAll(' ', '-')}`} onClick={() => setMenuOpen(false)}>{item}</a>)}
-      <div className="version-switch" aria-label="Website version selector">
+const references: Record<Version, string> = {
+  one: 'https://dentel.framer.website/',
+  two: 'https://dentalone.framer.ai/',
+};
+
+function App() {
+  const [version, setVersion] = useState<Version>(() => {
+    const saved = localStorage.getItem('dental-version');
+    return saved === 'two' ? 'two' : 'one';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('dental-version', version);
+  }, [version]);
+
+  return (
+    <main className="reference-host">
+      <nav className="version-nav" aria-label="Website version selector">
         <button className={version === 'one' ? 'active' : ''} onClick={() => setVersion('one')}>V1</button>
         <button className={version === 'two' ? 'active' : ''} onClick={() => setVersion('two')}>V2</button>
-      </div>
-      <a className="nav-cta" href="#contact">{version === 'one' ? 'Contact us' : 'Get started free'} <ArrowUpRight size={16} /></a>
-    </nav>
-    <button className="menu-toggle" aria-label={menuOpen ? 'Close menu' : 'Open menu'} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
-  </header>;
+      </nav>
+      <iframe
+        key={version}
+        className="reference-frame"
+        title={version === 'one' ? 'Dentel Version One' : 'DentalOne Version Two'}
+        src={references[version]}
+        allow="fullscreen"
+      />
+    </main>
+  );
 }
 
-function Button({ children, dark = false }: { children: ReactNode; dark?: boolean }) { return <a className={`pill-button ${dark ? 'dark' : ''}`} href="#contact">{children}<span className="button-icon"><ArrowUpRight size={17} /></span></a>; }
-function Eyebrow({ children }: { children: ReactNode }) { return <div className="eyebrow">{children}</div>; }
-function Reveal({ children, className = '' }: { children: ReactNode; className?: string }) { return <div className={`reveal ${className}`}>{children}</div>; }
+export default App;
 
-function VersionOne() {
-  const c = siteConfig.one;
-  return <main className="v1-page">
-    <section className="v1-hero" id="home"><div className="hero-grid"><div className="hero-copy"><Eyebrow>Trusted dental care</Eyebrow><h1>{c.heroTitle}</h1><p>{c.heroCopy}</p><Button>Book An Appointment</Button></div><div className="hero-art"><img src={c.heroImage} alt="Smiling patient receiving dental care" /></div></div><div className="hero-word">Dental <em>Care</em></div></section>
-    <section className="v1-about section" id="about-us"><div className="section-label">About Us</div><div className="about-layout"><h2>We make every <em>smile</em> feel like home.</h2><div><p>{c.about}</p><div className="stats"><Stat value="10k+" label="Happy patients" /><Stat value="98%" label="Satisfaction rate" /><Stat value="4.9" label="Excellent reviews" /></div></div></div></section>
-    <section className="v1-services section" id="services"><div className="section-heading"><div><div className="section-label">Services</div><h2>Advanced <em>oral health</em><br />treatment services</h2></div><p>Professional dental care using advanced techniques to maintain healthy, confident smiles always.</p></div><div className="service-grid">{c.services.map((s, i) => <Reveal className="v1-service-card" key={s.title}><img src={s.image} alt="" loading="lazy" decoding="async" /><div className="card-overlay"><span>0{i + 1}</span><h3>{s.title}</h3><p>{s.copy}</p><MoveRight /></div></Reveal>)}</div></section>
-    <section className="v1-problems section"><div className="section-heading"><div><div className="section-label">Causes</div><h2>Common <em>dental</em><br />problems</h2></div><div className="circle-note"><Play size={14} fill="currentColor" /> Learn about your smile</div></div><div className="problem-grid">{c.problems.map(([n, t, d]) => <div className="problem" key={n}><span>{n}</span><div><h3>{t}</h3><p>{d}</p></div></div>)}</div></section>
-    <section className="v1-process section" id="blog"><div className="section-heading"><div><div className="section-label">Process</div><h2>Treatment <em>work</em><br />flow</h2></div><p>Our step-by-step approach helps patients receive accurate diagnoses, effective treatments, and lasting results.</p></div><div className="process-line">{c.process.map((item, i) => <div className="process-step" key={item}><span>0{i + 1}</span><h3>{item}</h3><p>{i === 0 ? 'Carefully examine teeth and gums to create the best treatment plan.' : i === 1 ? 'Remove plaque, stains, and bacteria for healthier teeth.' : 'Gentle, clear treatment for a confident, healthy smile.'}</p></div>)}</div></section>
-    <section className="v1-transform section"><div className="section-heading"><div><div className="section-label">Transformations</div><h2>Incredible <em>smile</em><br />results</h2></div><p>Discover remarkable smile transformations with our gentle whitening treatments, delivering brighter teeth and renewed confidence.</p></div><div className="before-after"><figure><img src={c.services[1].image} alt="Before smile treatment" loading="lazy" decoding="async" /><figcaption>Before <span>Yellow and stained teeth</span></figcaption></figure><div className="swap-circle">↔</div><figure><img src="/images/v1-transform-after.jpg" alt="After smile treatment" loading="lazy" decoding="async" /><figcaption>After <span>Bright and confident smile</span></figcaption></figure></div></section>
-    <section className="v1-team section"><div className="section-heading"><div><div className="section-label">Our Dentists</div><h2>Meet our <em>expert</em><br />dental team</h2></div><p>Experienced professionals dedicated to comfortable visits, clear advice, and lasting healthy smiles.</p></div><div className="v1-team-grid">{['Dr. Sophia Miller','Dr. Emily Carter','Dr. James Wilson'].map((name, i) => <article key={name}><div className="v1-team-avatar">{name.split(' ').slice(1).map((n) => n[0]).join('')}</div><h3>{name}</h3><p>{['Orthodontic Specialist','General Dentist','Restorative Dentist'][i]}</p><a href="/member">About the dentist <ArrowUpRight size={14} /></a></article>)}</div></section>
-    <section className="v1-blog section"><div className="section-heading"><div><div className="section-label">Dental Blog</div><h2>Learn more about your <em>smile.</em></h2></div><p>Simple, practical guidance from our dental team for healthier teeth and gums.</p></div><div className="v1-blog-grid"><article><span>Oral health</span><h3>How regular checkups protect your smile</h3><p>Small visits can prevent bigger problems and make treatment easier.</p><a href="/blog">Read article <ArrowUpRight size={14} /></a></article><article><span>Wellness</span><h3>Five habits for stronger teeth every day</h3><p>Build a simple routine that keeps your smile bright and comfortable.</p><a href="/blog">Read article <ArrowUpRight size={14} /></a></article><article><span>Confidence</span><h3>What to expect from a gentle consultation</h3><p>We explain each step clearly so your care feels calm and personal.</p><a href="/blog">Read article <ArrowUpRight size={14} /></a></article></div></section>
-    <section className="v1-testimonials section"><div className="section-heading"><div><div className="section-label">Testimonials</div><h2>Trusted feedback from <em>valued patients.</em></h2></div><p>Patient reviews show our gentle care, new tools, and great results.</p></div><div className="testimonial-grid">{c.testimonials.map(([name, quote]) => <article key={name}><div className="stars">★★★★★</div><p>“{quote}”</p><strong>{name}</strong><small>Happy patient</small></article>)}</div></section>
-    <Footer version="one" />
-  </main>;
-}
-
-function Stat({ value, label }: { value: string; label: string }) { return <div><strong>{value}</strong><span>{label}</span></div>; }
-
-function VersionOneInner({ path }: { path: string }) {
-  const c = siteConfig.one;
-  const page = path.slice(1);
-  if (page === 'contact') return <main className="inner-page v1-inner"><section className="inner-hero"><Eyebrow>Contact Info</Eyebrow><h1>Get <em>Informed</em><br />Today</h1><p>Our team will contact you soon to confirm your appointment.</p></section><section className="appointment-panel section"><div><div className="section-label">Appointment Inquiry</div><h2>Book a time that works for <em>you.</em></h2><p>Request only. This frontend form is ready for an approved booking endpoint, but it does not submit until one is connected.</p></div><form onSubmit={(e) => e.preventDefault()}><label>Full Name *<input placeholder="Enter your full name" /></label><label>Email *<input type="email" placeholder="Enter your email" /></label><label>Age *<input type="number" placeholder="Enter your age" /></label><label>Preferred Date *<input type="date" /></label><label>Number *<input type="tel" placeholder="Enter your phone number" /></label><label>Select Service *<select defaultValue=""><option value="" disabled>Select one...</option><option>Teeth Whitening</option><option>Dental Implants</option><option>Root Canal</option><option>Braces Treatment</option><option>Oral Surgery</option></select></label><label>Select Doctor *<select defaultValue=""><option value="" disabled>Select one...</option><option>Dr. Sophia Miller</option><option>Dr. Daniel Wilson</option><option>Dr. Michael Carter</option><option>Dr. Olivia Brown</option><option>Dr. James Anderson</option></select></label><label>Gender *<select defaultValue=""><option value="" disabled>Select one...</option><option>Male</option><option>Female</option></select></label><label className="full-field">Write Message *<textarea placeholder="Enter your message" /></label><button className="form-submit" type="submit">Book An Appointment <ArrowUpRight size={17} /></button></form></section><Footer version="one" /></main>;
-  if (page === 'service') return <main className="inner-page v1-inner"><section className="inner-hero"><Eyebrow>Services</Eyebrow><h1>Meet <em>Our Experienced</em><br />Dental Team</h1><p>Professional dental care using advanced techniques to maintain healthy, confident smiles always.</p></section><section className="inner-service-list section">{[...c.services, { title: 'Dental Checkup', copy: 'Routine checkups help identify problems early and build a comfortable long-term care plan.', image: c.services[0].image }, { title: 'Teeth Cleaning', copy: 'Professional cleaning removes plaque, stains, and bacteria for healthier teeth and fresher breath.', image: c.services[1].image }].map((s, i) => <article key={s.title}><span>0{(i % 9) + 1}</span><div><h2>{s.title}</h2><p>{s.copy}</p><Button>Book An Appointment</Button></div><img src={s.image} alt="" loading="lazy" decoding="async" /></article>)}</section><Footer version="one" /></main>;
-  if (page === 'member') return <main className="inner-page v1-inner"><section className="inner-hero"><Eyebrow>Expert Dentists</Eyebrow><h1>Meet Our <em>Experienced</em><br />and Caring Dental Team</h1><p>Our dentists combine gentle care, modern tools, and clear communication for every visit.</p></section><section className="member-grid section">{['Dr. Sophia Miller','Dr. Emily Carter','Dr. James Wilson','Dr. Olivia Bennett','Dr. Maya Thompson','Dr. Amelia Brooks','Dr. Daniel Hayes','Dr. Ryan Foster'].map((name, i) => <article key={name}><div className="member-avatar">{name.split(' ').slice(1).map(n => n[0]).join('')}</div><h2>{name}</h2><p>{['Orthodontic Specialist','General Dentist','Restorative Dentist','Cosmetic Dentist','Family Dentist','Dental Surgeon','Endodontic Specialist','Oral Surgeon'][i]}</p></article>)}</section><Footer version="one" /></main>;
-  return <main className="inner-page v1-inner"><section className="inner-hero"><Eyebrow>{page === 'blog' ? 'Blog' : 'About Us'}</Eyebrow><h1>{page === 'blog' ? <>Stay <em>Informed About</em><br />Dental Care</> : <>Discover <em>Our Story</em><br />and Dental Services</>}</h1><p>{page === 'blog' ? 'Helpful guidance for healthier teeth, gums, and a more confident smile.' : c.about}</p></section><section className="inner-copy section"><div><div className="section-label">{page === 'blog' ? 'Highlights' : 'Results That Truly Matter'}</div><h2>{page === 'blog' ? 'How regular dental visits help maintain strong, healthy teeth.' : 'A trusted care journey built around your comfort.'}</h2></div><p>{page === 'blog' ? 'Regular checkups detect early problems, prevent decay, and ensure healthy gums and teeth through professional cleaning and expert dental advice.' : 'We help patients achieve brighter smiles through expert dental care and trusted professional service. Our approach combines advanced technology with a calm, human experience.'}</p></section><Footer version="one" /></main>;
-}
-
-function VersionTwo() {
-  const c = siteConfig.two;
-  return <main className="v2-page">
-    <section className="v2-hero" id="home"><div className="v2-hero-copy"><Eyebrow>Trusted Dental Care</Eyebrow><h1>{c.heroTitle}</h1><p>{c.heroCopy}</p><div className="hero-actions"><Button dark>Check Services</Button><Button>Book Appointments</Button></div><div className="hero-proof"><div className="avatar-stack"><span>SM</span><span>JA</span><span>EC</span></div><strong>10,000+</strong><small>Happy Smiles</small><span className="rating">★★★★★ <small>4.9/5 Stars</small></span></div></div><div className="v2-hero-image"><img className="hero-wave" src={c.heroImage} alt="" fetchPriority="high" /><img className="hero-orb" src="/images/v2-hero-tooth.png" alt="" fetchPriority="high" /><img className="hero-tooth" src="/images/v2-hero-badge-alpha.png" alt="DentalOne tooth illustration" fetchPriority="high" /><div className="float-tag tag-one">✦ Modern Dentistry</div><div className="float-tag tag-two">✦ Easy Process</div></div></section>
-    <section className="v2-intro section"><div className="intro-text"><Eyebrow>Trusted Dental Care</Eyebrow><h2>Modern dentistry,<br /><span>personal care,</span><br />a happier you.</h2><p>From routine checkups to advanced treatments, our services are designed around your comfort, health, and smile goals.</p><Button>Check Services</Button></div><div className="intro-image"><img src={c.introImage} alt="Dental care team" loading="lazy" decoding="async" /><div className="intro-stat"><strong>12+</strong><span>Years of care</span></div></div></section>
-    <section className="v2-services section" id="services"><div className="center-heading"><Eyebrow>Our Dental Services</Eyebrow><h2>Complete dental care for<br /><span>every stage</span> of your smile journey.</h2><p>{'From routine checkups to advanced treatments, our services are designed around your comfort, health, and smile goals.'}</p></div><div className="v2-service-grid">{c.services.map(([title, copy], i) => <article className="v2-service" key={title}><div className="service-number">0{i + 1}</div><div><h3>{title}</h3><p>{copy}</p><ul>{c.serviceDetails[i].map((detail) => <li key={detail}>{detail}</li>)}</ul></div><ArrowUpRight /></article>)}</div></section>
-    <section className="v2-steps section" id="process"><div className="center-heading"><Eyebrow>Simple Steps</Eyebrow><h2>Simple steps to a<br /><span>healthier smile.</span></h2><p>Getting the dental care you need is easy. From booking to treatment, we make every step simple and comfortable.</p></div><div className="steps-grid">{c.steps.map(([n, title, copy]) => <article key={n}><span>{n}</span><div className="step-visual"><div className="step-orb">{n === '01' ? '⌁' : n === '02' ? '◌' : '✦'}</div></div><h3>{title}</h3><p>{copy}</p></article>)}</div></section>
-    <section className="v2-team section"><div className="team-intro"><Eyebrow>Meet Our Dental Team</Eyebrow><h2>Experienced professionals dedicated to <span>your smile.</span></h2><p>Experienced professionals dedicated to making every visit comfortable, personalized, and focused on your smile.</p></div><div className="team-grid">{c.team.map(([name, role, bio, image]) => <article key={name}><div className="team-image"><img src={image} alt={name} loading="lazy" decoding="async" /></div><div className="team-meta"><h3>{name}</h3><p>{role}</p><button>About {name.split(' ')[1]} <ArrowUpRight size={15} /></button></div><div className="team-bio">{bio}</div></article>)}</div></section>
-    <section className="v2-why section"><div><Eyebrow>Why Us</Eyebrow><h2>Expert care,<br /><span>comfortable experience.</span></h2></div><div className="why-list"><div><strong>Experienced Dental Team</strong><span>Care from people who listen.</span></div><div><strong>Modern Technology</strong><span>Thoughtful tools, better outcomes.</span></div><div><strong>Personalized Care</strong><span>A plan made for your smile.</span></div><div><strong>Complete Dental Care</strong><span>One trusted team, every step.</span></div></div></section>
-    <section className="v2-review section"><div className="center-heading"><Eyebrow>Reviews</Eyebrow><h2>What our <span>patients say.</span></h2><p>Real experiences from patients who trust DentalOne with their smiles.</p></div><article><div className="stars">★★★★★</div><p>“{c.review}”</p><strong>DentalOne patient</strong></article></section>
-    <section className="v2-faq section" id="faq"><div className="faq-title"><Eyebrow>Frequently Asked Questions</Eyebrow><h2>Answers to common <span>care questions.</span></h2></div><div className="faq-list">{c.faq.map(([q, a]) => <details key={q}><summary>{q}<Plus size={19} /></summary><p>{a}</p></details>)}</div></section>
-    <section className="v2-contact section"><div><Eyebrow>Book Appointment</Eyebrow><h2>Make your next visit <span>simple.</span></h2><p>The form is frontend-only until an approved booking endpoint is connected.</p></div><form onSubmit={(e) => e.preventDefault()}><label>Full Name *<input placeholder="Enter your full name" /></label><label>Number *<input placeholder="Enter your phone number" /></label><label>Preferred Date *<input type="date" /></label><label>Select Service *<select defaultValue=""><option value="" disabled>Select one...</option><option>Teeth Whitening</option><option>Dental Implants</option><option>Root Canal</option><option>Braces Treatment</option></select></label><label className="full-field">Write Message *<textarea placeholder="Enter your message" /></label><button className="form-submit" type="submit">Get Appointment <ArrowUpRight size={17} /></button></form></section>
-    <Footer version="two" />
-  </main>;
-}
-
-function Footer({ version }: { version: Version }) { const c = siteConfig[version]; return <footer className={`footer footer-${version}`} id="contact"><div className="footer-main"><div><a className={`brand brand-${version}`} href="#home">{version === 'two' ? <img className="brand-image" src="/images/ref-logo-2.png" alt="DentalOne" /> : <><span className="tooth-mark">✦</span><span>{c.name}</span></>}</a><h2>{version === 'one' ? 'Your smile deserves\nthe best care.' : 'A healthier smile\nstarts here.'}</h2><Button dark>Get Appointment</Button></div><div className="contact-card"><Eyebrow>Contact</Eyebrow><a href={`tel:${siteConfig.shared.phone}`}>{siteConfig.shared.phone}</a><p>{siteConfig.shared.address}</p><div className="hours">{siteConfig.shared.hours.map((h) => <span key={h}>{h}</span>)}</div></div></div><div className="footer-bottom"><span>© 2026 {c.name}. All Rights Reserved.</span><span>Privacy Policy &nbsp; Terms of Use</span><span>Made with care for your smile.</span></div></footer>; }
-
-createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictMode>);
+createRoot(document.getElementById('root')!).render(<App />);

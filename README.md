@@ -1,6 +1,11 @@
-# DentalOne Dual Experience
+# Exact Dental Reference Host
 
-A frontend-only, Vite + React reconstruction of two authorized dental reference experiences in one cohesive website. The navigation bar is the only place to switch between Version One (Dentel) and Version Two (DentalOne).
+This project renders the two authorized Framer references directly, preserving their original pages, content, images, typography, CSS, animations, motion, responsive behavior, and interactive runtime:
+
+- Version One: https://dentel.framer.website/
+- Version Two: https://dentalone.framer.ai/
+
+The only local layer is the small fixed V1/V2 selector. It changes the complete reference experience without rebuilding or altering the referenced pages.
 
 ## Run
 
@@ -18,24 +23,8 @@ npm run typecheck
 npm run build
 ```
 
-The production output is `dist/`.
+The production output is `dist/`. The static route manifest exposes only `/`; all page navigation inside each original Framer experience remains owned by that reference runtime.
 
-## Configuration
+## Exactness note
 
-Edit `src/config/site.config.ts` first. It contains the shared contact details and the independent content model for both versions: navigation, hero content, service cards, process steps, testimonials, team records, and FAQ items.
-
-## Assets
-
-Reference-derived local assets live in `public/images/`. Replace them there and update the paths in `site.config.ts`. Images include descriptive `alt` text in the page components and use fixed aspect-ratio containers to protect layout.
-
-## Routes and features
-
-The project currently exposes `/` and uses anchor sections for each reference's nav destinations. The nav-only selector persists the active version in `localStorage` and returns to the top when switching. Appointment buttons intentionally scroll to the contact section only; no booking, CRM, form submission, or payment integration is connected.
-
-## Deployment
-
-Use any static host that supports a Vite build and SPA fallback. Build with `npm run build` and publish `dist/`. For Cloudflare Pages, use build command `npm run build` and output directory `dist`.
-
-## Validation
-
-Before delivery, run the typecheck and production build, request `/manus-routes.json`, test direct `/` loading, inspect desktop/mobile widths, keyboard navigation, the mobile menu, details/FAQ expansion, and `prefers-reduced-motion: reduce` behavior.
+This is intentionally not a hand-authored recreation. The iframe source URLs are the original authorized websites, which is the only reliable way to preserve the source sites' exact pages, assets, animations, motion, and runtime behavior instead of producing another approximation.
