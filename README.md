@@ -1,11 +1,11 @@
 # Exact Dental Reference Host
 
-This project renders the two authorized Framer references directly, preserving their original pages, content, images, typography, CSS, animations, motion, responsive behavior, and interactive runtime:
+This project contains local mirrored copies of the two authorized reference pages. Their original Framer HTML/runtime/assets are preserved locally, while the original visible footer and builder badge are replaced with the requested Abdul Anas builder credit:
 
 - Version One: https://dentel.framer.website/
 - Version Two: https://dentalone.framer.ai/
 
-The only local layer is the small fixed V1/V2 selector. It changes the complete reference experience without rebuilding or altering the referenced pages.
+The small fixed V1/V2 selector changes the complete reference experience. Version One includes local copies of the linked About, Service, Blog, Member, and Contact pages.
 
 ## Run
 
@@ -27,4 +27,4 @@ The production output is `dist/`. The static route manifest exposes only `/`; al
 
 ## Exactness note
 
-This is intentionally not a hand-authored recreation. The iframe source URLs are the original authorized websites, which is the only reliable way to preserve the source sites' exact pages, assets, animations, motion, and runtime behavior instead of producing another approximation.
+This is intentionally not a hand-authored recreation. The files under `public/mirror/` are fetched copies of the authorized reference HTML/runtime pages. This preserves the original pages, assets, animations, motion, and runtime behavior while allowing the visible footer and builder badge to be customized locally.

@@ -5,8 +5,8 @@ import './styles.css';
 type Version = 'one' | 'two';
 
 const references: Record<Version, string> = {
-  one: 'https://dentel.framer.website/',
-  two: 'https://dentalone.framer.ai/',
+  one: '/mirror/v1/index.html',
+  two: '/mirror/v2/index.html',
 };
 
 function App() {
