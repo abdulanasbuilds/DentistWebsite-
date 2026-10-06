@@ -48,6 +48,14 @@ export const siteConfig = {
       ['Pediatric Dentistry', 'Gentle, child-friendly dental care that supports healthy teeth and positive habits.'],
       ['Specialized Treatments', 'Advanced dental solutions tailored to specific oral health needs and complex conditions.'],
     ],
+    serviceDetails: [
+      ['Dental Checkups', 'Teeth Cleaning', 'Dental Fillings', 'Tooth Extraction', 'Gum Disease Treatment', 'Root Canal Treatment', 'Tooth Sensitivity Treatment', 'Emergency Dentistry'],
+      ['Teeth Whitening', 'Dental Veneers', 'Dental Bonding', 'Smile Makeover', 'Gum Contouring', 'Tooth Reshaping', 'Cosmetic Fillings'],
+      ['Dental Crowns', 'Dental Bridges', 'Dental Implants', 'Dentures', 'Full Mouth Rehabilitation', 'Inlays & Onlays', 'Broken Tooth Restoration'],
+      ['Traditional Braces', 'Ceramic Braces', 'Clear Aligners', 'Invisalign Treatment', 'Retainers', 'Bite Correction', 'Teeth Straightening'],
+      ["Children's Dental Checkups", 'Kids Teeth Cleaning', 'Cavity Treatment', 'Fluoride Treatment', 'Dental Sealants', 'Space Maintainers', 'Preventive Dental Care'],
+      ['Wisdom Tooth Removal', 'Impacted Tooth Treatment', 'Gum Surgery', 'Periodontal Treatment', 'Oral Surgery', 'TMJ Treatment', 'Sleep Apnea Dentistry', 'Oral Cancer Screening'],
+    ],
     steps: [['01', 'Book Online', 'Choose a convenient date and time'], ['02', 'Visit Our Clinic', 'Meet our dental team for a consultation'], ['03', 'Get Your Treatment', 'Receive the treatment with a clear care plan']],
     team: [
       ['Dr. Sarah Mitchell', 'Lead Dentist · DDS, MDS', 'Dr. Sarah Mitchell is an experienced dentist focused on comprehensive oral care and preventive treatment.', '/images/v2-team-1.jpg'],
@@ -55,5 +63,6 @@ export const siteConfig = {
       ['Dr. Emily Carter', 'Lead Dentist · DDS, MDS', 'Dr. Emily Carter provides gentle, family-friendly dental care with a focus on children and orthodontic treatments.', '/images/v2-team-1.jpg'],
     ],
     faq: [['How often should I visit the dentist?', 'Regular checkups every six months help keep your teeth and gums healthy.'], ['Do you offer cosmetic dentistry?', 'Yes. Our cosmetic services are designed around your smile goals and comfort.'], ['Can I book online?', 'The appointment interface is ready for connection to an approved booking provider.']],
+    review: 'From the first consultation to my treatment, everything was explained clearly. The entire experience was smooth and comfortable.',
   },
 } as const;
