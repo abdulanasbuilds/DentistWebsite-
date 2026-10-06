@@ -21,4 +21,8 @@ Both source URLs and the preview return HTTP 200. The preview was visually check
 
 ## Intentional local changes
 
-The local mirror replaces the original visible footer contents and builder promotion badge on every copied page. Each footer now prominently displays `BUILD BY ABDUL ANAS`, the builder positioning message, `@abdulanasbuilds on social media`, WhatsApp `+233 597 896 078`, and phone `0503474172`. The small fixed V1/V2 selector is also local and required to switch between the two complete websites.
+The local mirror replaces the original visible footer contents and builder promotion badge on every copied page. Each footer now prominently displays `BUILD BY ABDUL ANAS` and the builder positioning message, with optional builder contact placeholder text. The small fixed V1/V2 selector is also local and required to switch between the two complete websites.
+
+## Template sanitization pass
+
+Client-specific clinic phone numbers, emails, addresses, locations, prices, social links, external anchor destinations, and original Framer promotion elements are now removed or replaced by editable placeholders such as `Add clinic phone`, `Add clinic address`, `Add clinic email`, and `Add pricing`. Appointment/contact forms are visually preserved but their submissions are intercepted and do not send data to any external service.

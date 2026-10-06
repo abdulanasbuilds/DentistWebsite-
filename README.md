@@ -7,6 +7,10 @@ This project contains local mirrored copies of the two authorized reference page
 
 The small fixed V1/V2 selector changes the complete reference experience. Version One includes local copies of the linked About, Service, Blog, Member, and Contact pages.
 
+## Template sanitization
+
+The mirrored pages keep their visual design and motion, but client-specific phone numbers, email addresses, locations, prices, social links, outbound navigation, and original builder badges have been removed. Neutral labels such as `Add clinic phone`, `Add clinic address`, `Add clinic email`, and `Add pricing` are placeholders for a future dentist client. Appointment/contact forms remain visual demo controls and do not submit anywhere.
+
 ## Run
 
 ```bash
